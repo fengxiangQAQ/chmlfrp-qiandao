@@ -1,0 +1,40 @@
+<html lang="zh-CN">
+<head>
+  <title>XCL II 签到页</title>
+</head>
+<body>
+  <p id="msg"></p>
+  <script src="https://static.geetest.com/v4/gt4.js"></script>
+  <script>
+    const params = new URLSearchParams(location.hash.slice(1));
+    let captchaObj = null;
+    initGeetest4({
+      captchaId: '3891b578aa85e4866c5f8205b02b165a',
+      product: 'bind',
+      language: 'zho'
+    }, function(obj){
+        captchaObj = obj;
+        obj.onSuccess(async function(){
+            const result = obj.getValidate();
+            const response = await fetch('https://cf-v2.uapis.cn/qiandao', {
+                method: 'POST',
+                headers:{
+                    'authorization' : 'Bearer '+params.get('token'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    lot_number: result.lot_number,
+                    captcha_output: result.captcha_output,
+                    pass_token: result.pass_token,
+                    gen_time: result.gen_time
+                })
+            });
+            const data = await response.json()
+            document.getElementById("msg").textContent = data.msg;
+        });
+        obj.onError(function(){document.getElementById("msg").textContent = "验证器加载错误";});
+        captchaObj.showCaptcha();
+    });
+  </script>
+</body>
+</html>

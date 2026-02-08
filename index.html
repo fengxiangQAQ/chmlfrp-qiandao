@@ -6,7 +6,6 @@
   <p id="msg"></p>
   <script src="https://static.geetest.com/v4/gt4.js"></script>
   <script>
-    const params = new URLSearchParams(location.hash.slice(1));
     let captchaObj = null;
     initGeetest4({
       captchaId: '3891b578aa85e4866c5f8205b02b165a',
@@ -19,7 +18,7 @@
             const response = await fetch('https://cf-v2.uapis.cn/qiandao', {
                 method: 'POST',
                 headers:{
-                    'authorization' : 'Bearer '+params.get('token'),
+                    'authorization' : 'Bearer '+location.hash,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
